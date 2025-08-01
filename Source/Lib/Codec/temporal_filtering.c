@@ -2869,31 +2869,31 @@ static EbErrorType produce_temporally_filtered_pic(
             (input_picture_ptr_central->org_x >> ss_x),
     };
     int decay_control[COLOR_CHANNELS];
-    if ((scs->vq_ctrls.sharpness_ctrls.tf && centre_pcs->is_noise_level
-        && scs->calculate_variance && centre_pcs->pic_avg_variance < VQ_PIC_AVG_VARIANCE_TH)
-        || scs->static_config.tune == 3 || scs->static_config.tune == 0) {
+    // if ((scs->vq_ctrls.sharpness_ctrls.tf && centre_pcs->is_noise_level
+    //     && scs->calculate_variance && centre_pcs->pic_avg_variance < VQ_PIC_AVG_VARIANCE_TH)
+    //     || scs->static_config.tune == 3 || scs->static_config.tune == 0) {
 
         decay_control[C_Y] = 1;
         decay_control[C_U] = 1;
         decay_control[C_V] = 1;
-    }
-    else {
-        decay_control[C_Y] = 3;
-        decay_control[C_U] = 6;
-        decay_control[C_V] = 6;
+    // }
+    // else {
+    //     decay_control[C_Y] = 3;
+    //     decay_control[C_U] = 6;
+    //     decay_control[C_V] = 6;
 
 
-        if (centre_pcs->slice_type != I_SLICE) {
+    //     if (centre_pcs->slice_type != I_SLICE) {
 
-            int ratio = noise_levels_log1p_fp16[0]
-                ? (centre_pcs->filt_to_unfilt_diff * 100) / noise_levels_log1p_fp16[0]
-                : 0;
+    //         int ratio = noise_levels_log1p_fp16[0]
+    //             ? (centre_pcs->filt_to_unfilt_diff * 100) / noise_levels_log1p_fp16[0]
+    //             : 0;
 
-            if (ratio > 150) {
-                decay_control[C_Y] += 1;
-            }
-        }
-    }
+    //         if (ratio > 150) {
+    //             decay_control[C_Y] += 1;
+    //         }
+    //     }
+    // }
     // Adjust filtering based on q.
     // Larger q -> stronger filtering -> larger weight.
     // Smaller q -> weaker filtering -> smaller weight.
@@ -3504,18 +3504,18 @@ static EbErrorType produce_temporally_filtered_pic_ld(
             (input_picture_ptr_central->org_x >> ss_x),
     };
     int decay_control;
-    if ((scs->vq_ctrls.sharpness_ctrls.tf && centre_pcs->is_noise_level
-        && scs->calculate_variance && centre_pcs->pic_avg_variance < VQ_PIC_AVG_VARIANCE_TH)
-        || scs->static_config.tune == 3 || scs->static_config.tune == 0 ) {
+    // if ((scs->vq_ctrls.sharpness_ctrls.tf && centre_pcs->is_noise_level
+    //     && scs->calculate_variance && centre_pcs->pic_avg_variance < VQ_PIC_AVG_VARIANCE_TH)
+        // || scs->static_config.tune == 3 || scs->static_config.tune == 0 ) {
         decay_control = 1;
-    }
-    else {
-        // Hyper-parameter for filter weight adjustment.
-        decay_control =  3;
-        // Decrease the filter strength for low QPs
-        if (scs->static_config.qp <= ALT_REF_QP_THRESH)
-            decay_control--;
-    }
+    // }
+    // else {
+    //     // Hyper-parameter for filter weight adjustment.
+    //     decay_control =  3;
+    //     // Decrease the filter strength for low QPs
+    //     if (scs->static_config.qp <= ALT_REF_QP_THRESH)
+    //         decay_control--;
+    // }
     FP_ASSERT(TF_Q_DECAY_THRESHOLD == 20);
     const uint32_t q_decay_fp8 = 256;
 
